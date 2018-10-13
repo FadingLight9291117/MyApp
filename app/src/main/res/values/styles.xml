@@ -20,6 +20,7 @@
         <item name="windowNoTitle">true</item>
         <!--实现全屏-->
         <item name="android:windowFullscreen">true</item>
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
