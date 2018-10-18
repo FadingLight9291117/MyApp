@@ -24,6 +24,8 @@
 
 
 
+
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
