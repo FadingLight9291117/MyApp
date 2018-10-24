@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FaceDetect {
-        public void process(byte[] data, int width, int height) {
+        public static void Detect(byte[] data, int width, int height) {
             AFD_FSDKEngine engine = new AFD_FSDKEngine();
 
             // 用来存放检测到的人脸信息列表
@@ -18,7 +18,8 @@ public class FaceDetect {
 
 
             //初始化人脸检测引擎，使用时请替换申请的APPID和SDKKEY
-            AFD_FSDKError err = engine.AFD_FSDK_InitialFaceEngine("APPID","SDKKEY", AFD_FSDKEngine.AFD_OPF_0_HIGHER_EXT, 16, 5);
+            AFD_FSDKError err = engine.AFD_FSDK_InitialFaceEngine("6TvueTejNt6tRWuZ53MtQ1WPiDAVgtXNcntcaEqeD5fc","7pnFdezmCfkCeJVeEhy1jBuskQs4rSfhnx3xksuJUtd2",
+                    AFD_FSDKEngine.AFD_OPF_0_HIGHER_EXT, 16, 25);
             Log.d("com.arcsoft", "AFD_FSDK_InitialFaceEngine = " + err.getCode());
 
 
