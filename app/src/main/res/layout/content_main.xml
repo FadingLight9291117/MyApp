@@ -22,15 +22,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/active_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:onClick="activeEngine"
-        android:text="激活引擎"
-        app:layout_constraintStart_toStartOf="@+id/Imagetest"
-        app:layout_constraintTop_toBottomOf="@+id/Imagetest" />
 
     <Button
         android:id="@+id/previewtest"

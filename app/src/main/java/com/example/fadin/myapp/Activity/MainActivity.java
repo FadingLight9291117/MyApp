@@ -77,14 +77,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });*/
+        }); */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -117,15 +117,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     //onClick实现激活引擎
-    public void activeEngine(final View view) {
+    public void activeEngine() {
         if (!checkPermissions(NEEDED_PERMISSIONS)) {
 
             ActivityCompat.requestPermissions(this, NEEDED_PERMISSIONS, ACTION_REQUEST_PERMISSIONS);
             return;
         }
-        if (view != null) {
-            view.setClickable(false);
-        }
+
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
@@ -146,12 +144,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (activeCode == ErrorInfo.MOK) {
                             showToast("激活成功");
                         } else if (activeCode == ErrorInfo.MERR_ASF_ALREADY_ACTIVATED) {
-                            showToast("激活成功，无需重复激活");
+                            showToast("已激活成功，无需重复激活");
                         } else {
                             showToast("激活失败："+activeCode);
-                        }
-                        if (view != null) {
-                            view.setClickable(true);
                         }
                     }
                     @Override
@@ -185,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 isAllGranted &= (grantResult == PackageManager.PERMISSION_GRANTED);
             }
             if (isAllGranted) {
-                activeEngine(null);
+                activeEngine();
             } else {
                 showToast("权限被拒绝");
             }
@@ -201,18 +196,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toast.show();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -261,8 +244,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+            activeEngine();
+        }
+        else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 

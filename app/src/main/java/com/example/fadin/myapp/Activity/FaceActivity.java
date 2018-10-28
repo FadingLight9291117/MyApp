@@ -8,7 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.fadin.myapp.R;
-import com.example.fadin.myapp.Util.CameraController;
+import com.example.fadin.myapp.Util.face0.CameraController;
 
 public class FaceActivity extends Activity {
 

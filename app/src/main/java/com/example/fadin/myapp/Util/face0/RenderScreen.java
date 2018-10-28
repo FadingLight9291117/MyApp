@@ -1,11 +1,11 @@
-package com.example.fadin.myapp.Util;
+package com.example.fadin.myapp.Util.face0;
 
 import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
-import com.example.fadin.myapp.Util.CameraController;
-import com.example.fadin.myapp.Util.GlUtil;
+import com.example.fadin.myapp.Util.face0.CameraController;
+import com.example.fadin.myapp.Util.face0.GlUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
