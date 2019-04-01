@@ -3,8 +3,11 @@ package com.example.fadin.myapp.Activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,11 +34,22 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fadin.myapp.R;
+import com.example.fadin.myapp.common.DataBaseHelper;
+import com.example.fadin.myapp.common.FPWDDao;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -50,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
+     *
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
@@ -59,23 +74,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
-
+    private final String login_url = "http://188.131.169.241:8080/Project/Account/Login";
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView usernameView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-
+    private Button btn_reg;
+    private Button btn_fpw;
+    OkHttpClient client = new OkHttpClient();
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        try {
+            DataBaseHelper dbHelper5 = new DataBaseHelper(LoginActivity.this, "test_db");
+            SQLiteDatabase db5 = dbHelper5.getReadableDatabase();
+            //创建游标对象
+            Cursor cursor = db5.query("user", new String[]{"name","password"}, null, null, null, null, null);
+            //利用游标遍历所有数据对象
+            Log.d("READ","RRRRRRRRR");
+            while(cursor.moveToNext()){
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String password = cursor.getString(cursor.getColumnIndex("password"));
+                //日志打印输出
+                Log.i("READDB","query-->"+name+" "+password);
+//                showProgress(true);
+                mAuthTask = new UserLoginTask(name, password);
+                mAuthTask.execute((Void) null);
+            }
+
+        }catch (Exception e){
+            DataBaseHelper dbHelper1 = new DataBaseHelper(LoginActivity.this, "test_db");
+            SQLiteDatabase db2 = dbHelper1.getReadableDatabase();
+
+            Log.e("TARRR","DatabaseERROR");
+        }
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        init();
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -88,19 +128,65 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+//        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+////                startActivity(intent);
+//
+//            }
+//        });
+        OnClickListener onclick = new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-                attemptLogin();
-            }
-        });
+                switch (view.getId()){
+                    case R.id.email_sign_in_button:
+                        Log.d("LOGIN","press sign in");
+                        attemptLogin();
+                        break;
+                    case R.id.forget:
+                        Intent i = new Intent();
+                        i.setClass(LoginActivity.this, ForgetPwdActivity.class);
+                        startActivityForResult(i,2);
+                        break;
+                    case R.id.register:
+                        Intent in = new Intent();
+                        in.setClass(LoginActivity.this, RegisterActivity.class);
+                        startActivityForResult(in,1);
+                        break;
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+                }
+            }
+        };
+        btn_reg.setOnClickListener(onclick);
+        btn_fpw.setOnClickListener(onclick);
+        mEmailSignInButton.setOnClickListener(onclick);
+
     }
 
+    public void init(){
+        mPasswordView = (EditText) findViewById(R.id.password);
+        usernameView = (AutoCompleteTextView) findViewById(R.id.si_username);
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+        btn_reg = findViewById(R.id.register);
+        btn_fpw = findViewById(R.id.forget);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            String result = data.getExtras().getString("result");//得到新Activity 关闭后返回的数据
+            if (result==null){
+                return;
+            }
+            usernameView.setText(result);
+            Log.i("Return", result);
+        }catch (Exception ee){
+            ee.printStackTrace();
+        }
+
+
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -117,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(usernameView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -156,11 +242,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        usernameView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String username = usernameView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -180,13 +266,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        if (TextUtils.isEmpty(username)) {
+            usernameView.setError(getString(R.string.error_field_required));
+            focusView = usernameView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+        } else if (!isUsernameValid(username)) {
+            usernameView.setError(getString(R.string.error_invalid_email));
+            focusView = usernameView;
             cancel = true;
         }
 
@@ -198,20 +284,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
-            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-            startActivity(intent);
+
         }
     }
-
+    private boolean isUsernameValid(String username) {
+        return username.length() > 2 && username.equals(stringFilter(username));
+    }
+    public static String stringFilter(String str)throws PatternSyntaxException { // 只允许字母、数字和汉字      
+        String regEx ="[^a-zA-Z0-9\u4E00-\u9FA5]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        return  m.replaceAll("").trim();
+    }
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+
         return password.length() > 4;
     }
 
@@ -291,7 +384,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        usernameView.setAdapter(adapter);
     }
 
 
@@ -311,35 +404,69 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mUsername;
         private final String mPassword;
+        String res = "";
+        String getCallback(String url) throws IOException {
+//        RequestBody body = RequestBody.create(JSON, json);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+            try (Response response = client.newCall(request).execute()) {
+                if (response.code() != 200){
+                    Looper.prepare();
+                    Toast.makeText(LoginActivity.this,"NetWork Error,Please Check Your NetWork.",Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                    return "";
+                }
+                return response.body().string();
+            }
+        }
+        UserLoginTask(String username, String password) {
+            mUsername = username;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
             mPassword = password;
+
+//            Runnable networktask = new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                }
+//            };
+//           new Thread(networktask).start();
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                String login_url1 =login_url + "?username="+mUsername+"&password="+mPassword;
+                res = getCallback(login_url1);
+                Log.e("MRES", res);
+            } catch (IOException e) {
+                e.printStackTrace();
                 return false;
             }
+                // Simulate network access.
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
+            if (res.contains("-1")||res.equals("")){
+                return false;
+            }else {
+                return true;
+
             }
 
-            // TODO: register the new account here.
-            return true;
+
         }
 
         @Override
@@ -348,6 +475,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
+                ContentValues values = new ContentValues();
+                //像ContentValues中存放数据
+                values.put("password", mPassword);
+                values.put("name", mUsername);
+
+                DataBaseHelper dbHelper3 = new DataBaseHelper(LoginActivity.this, "test_db");
+                SQLiteDatabase db3 = dbHelper3.getWritableDatabase();
+                dbHelper3.deleteAll(db3);
+                //数据库执行插入命令
+                db3.insert("user", null, values);
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

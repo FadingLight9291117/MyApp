@@ -38,11 +38,19 @@
         <activity
             android:name=".Activity.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".Activity.RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".Activity.ForgetPwdActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <activity android:name="com.example.fadin.myapp.Activity.FaceActivity" />
         <activity android:name="com.example.fadin.myapp.Activity.FaceActivity1" />
         <activity android:name="com.example.fadin.myapp.Activity.FaceActivity2" />
-
     </application>
 
 </manifest>

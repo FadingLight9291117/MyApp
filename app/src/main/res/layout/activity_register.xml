@@ -58,11 +58,29 @@
                 android:layout_marginTop="50dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/si_username"
+                    android:id="@+id/reg_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <EditText
+                    android:id="@+id/reg_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/action_sign_up_username"
-                    android:inputType="textEmailAddress"
+                    android:imeActionId="6"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -74,7 +92,7 @@
               >
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_pwd1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
@@ -86,42 +104,36 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/email_sign_in_button"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textColor="#ffffff"
-                android:textSize="18dp"
-                android:textStyle="normal"
-                />
-
-            <RelativeLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >
 
-                <Button
-                    android:id="@+id/forget"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/reg_pwd2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:text="忘记密码?"
-                    android:textColor="@color/logincolorAccent"/>
+                    android:hint="@string/prompt_password_conf"
+                    android:imeActionId="6"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
-                <Button
-                    android:id="@+id/register"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:background="@null"
-                    android:text="欢迎注册>"
-                    android:textColor="@color/logincolorAccent"
-                    />
-            </RelativeLayout>
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/email_sign_up_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_up"
+                android:textColor="#ffffff"
+                android:textSize="18dp"
+                android:textStyle="normal"
+                android:background="#FE7151"
+                />
 
         </LinearLayout>
     </ScrollView>

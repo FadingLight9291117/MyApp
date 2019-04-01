@@ -3,6 +3,7 @@ package com.example.fadin.myapp.Activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -25,6 +26,7 @@ import com.arcsoft.face.ErrorInfo;
 import com.arcsoft.face.FaceEngine;
 import com.example.fadin.myapp.R;
 import com.example.fadin.myapp.common.Constants;
+import com.example.fadin.myapp.common.DataBaseHelper;
 
 
 import io.reactivex.Observable;
@@ -226,6 +228,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if (id == R.id.action_change_user){
+            Intent intent= new Intent();
+            intent.setClass(MainActivity.this,LoginActivity.class);
+            DataBaseHelper helper = new DataBaseHelper(MainActivity.this,"test_db");
+            SQLiteDatabase db3 = helper.getWritableDatabase();
+            helper.deleteAll(db3);
+            startActivity(intent);
+
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

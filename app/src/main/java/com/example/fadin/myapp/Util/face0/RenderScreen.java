@@ -55,7 +55,6 @@ public class RenderScreen {
         Camera.Size size = CameraController.getInstance().getmPreviewSize();
         int width = size.width;
         int height = size.height;
-        //TODO 横竖屏对宽高的调整
         if(CameraController.getInstance().isLandscape()) {
             cameraWidth = Math.max(width, height);
             cameraHeight = Math.min(width, height);
