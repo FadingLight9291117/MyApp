@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">My App</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">邮箱</string>
+    <string name="prompt_password">密码</string>
+    <string name="prompt_password_conf">确认密码</string>
+    <string name="prompt_studentnumber">学号</string>
+    <string name="action_sign_in">登录</string>
+    <string name="action_sign_up">注册</string>
+    <string name="action_comfirm">确认</string>
+    <string name="action_sign_up_username">用户名</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">这个邮箱是无效的</string>
+    <string name="error_invalid_username2">非法用户名</string>
+    <string name="error_invalid_password">这个密码太短了</string>
+    <string name="error_invalid_username">Invalid Username</string>
+    <string name="error_invalid_username1">Username has been used</string>
+    <string name="error_incorrect_password">这个密码是错误的</string>
+    <string name="error_incorrect_password1">Password Confirmation Failed. </string>
+    <string name="error_field_required">这是必填的</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">设置</string>
+    <string name="title_home">Home</string>
+    <string name="change_user">退出登录</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+</resources>
