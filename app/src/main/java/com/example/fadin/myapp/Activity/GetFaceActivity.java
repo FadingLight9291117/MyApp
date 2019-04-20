@@ -1,34 +1,37 @@
 package com.example.fadin.myapp.Activity;
 
-import android.app.Activity;
+
 import android.hardware.Camera;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import com.example.fadin.myapp.R;
 import com.example.fadin.myapp.Util.face0.CameraController;
+import com.example.fadin.myapp.Util.widget.MySurfaceView;
 
-public class FaceActivity extends Activity {
+public class GetFaceActivity extends AppCompatActivity {
 
-    private final String TAG = "FaceActivity";
+    private final String TAG = "GetFaceActivity";
 
-    private SurfaceView mSurfaceView;
+    private MySurfaceView mMySurfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.face1);
-        setTitle("FACE");
+        setContentView(R.layout.activity_getface);
+        setTitle("录入人脸");
 
         initSurfaceView();
+
     }
 
     private void initSurfaceView(){
 
-        mSurfaceView = (SurfaceView)findViewById(R.id.surfaceview);
-        mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+        mMySurfaceView = (MySurfaceView) findViewById(R.id.mysurfaceview);
+        mMySurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 Log.i(TAG,"surfaceCreated");
@@ -52,7 +55,6 @@ public class FaceActivity extends Activity {
 
             }
 
-
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 Log.i(TAG,"surfaceDestroyed");
@@ -60,6 +62,4 @@ public class FaceActivity extends Activity {
             }
         });
     }
-
-
 }

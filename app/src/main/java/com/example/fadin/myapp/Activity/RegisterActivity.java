@@ -66,6 +66,11 @@ public class RegisterActivity extends AppCompatActivity{
                     intent.putExtra("result", String.valueOf(edt_username.getText()));
                     //设置返回数据
                     RegisterActivity.this.setResult(RESULT_OK, intent);
+
+                    //跳转到FaceActivity，录入人脸
+                    Intent intentt=new Intent(RegisterActivity.this, GetFaceActivity.class);
+                    startActivity(intentt);
+
                     //关闭Activity
                     Toast.makeText(RegisterActivity.this,"Successfully Registered!",Toast.LENGTH_SHORT).show();
                     RegisterActivity.this.finish();
